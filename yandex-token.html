@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yandex callback</title>
+  <script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-token-with-polyfills-latest.js"></script>
+  <script src="./config.js"></script>
+</head>
+<body>
+<script>
+  const cfg = window.ENERGO_CONFIG || {};
+  if (!cfg.appOrigin) {
+    document.body.textContent = 'Ошибка: appOrigin не задан в config.js';
+  } else {
+    window.YaSendSuggestToken(cfg.appOrigin);
+  }
+</script>
+</body>
+</html>
