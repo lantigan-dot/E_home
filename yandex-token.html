@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Подключение Яндекс ID</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <script src="./config.js"></script>
+  <script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-token-with-polyfills-latest.js"></script>
+  <style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#efefeb;color:#171815;font:16px Arial,sans-serif}.box{max-width:420px;padding:28px;text-align:center}.spin{width:34px;height:34px;margin:0 auto 18px;border:3px solid #d5d5cf;border-top-color:#fc3f1d;border-radius:50%;animation:r .75s linear infinite}@keyframes r{to{transform:rotate(360deg)}}.error{color:#8a271c;line-height:1.5}</style>
+</head>
+<body>
+  <main class="box" aria-live="polite">
+    <div id="spin" class="spin"></div>
+    <strong id="message">Завершаем подключение Яндекс ID…</strong>
+  </main>
+  <script>
+    'use strict';
+    window.addEventListener('load', function () {
+      const cfg = window.ENERGO_CONFIG || {};
+      const message = document.getElementById('message');
+      const spin = document.getElementById('spin');
+
+      if (!cfg.appOrigin) {
+        spin.hidden = true;
+        message.className = 'error';
+        message.textContent = 'Ошибка конфигурации: appOrigin не задан.';
+        return;
+      }
+      if (window.location.origin !== cfg.appOrigin) {
+        spin.hidden = true;
+        message.className = 'error';
+        message.textContent = 'Ошибка origin: страница опубликована на другом домене.';
+        return;
+      }
+      if (typeof window.YaSendSuggestToken !== 'function') {
+        spin.hidden = true;
+        message.className = 'error';
+        message.textContent = 'Не загрузился модуль Яндекс ID. Проверьте соединение.';
+        return;
+      }
+
+      // Важно: здесь передаётся только origin страницы с кнопкой — без /E_home/.
+      window.YaSendSuggestToken(cfg.appOrigin, { source: 'e-home' });
+    });
+  </script>
+</body>
+</html>
